@@ -1,0 +1,13 @@
+[
+  {
+    "id": "209d4cdc-2605-4de3-87cd-8238364af801",
+    "lat": 28.248011739639047,
+    "lon": 77.07637890574271,
+    "type": "wildfire",
+    "description": "Heatwave",
+    "severity": "critical",
+    "location": "Sohna",
+    "timestamp": "2026-05-08T06:26:49.088Z",
+    "votes": 0
+  }
+]

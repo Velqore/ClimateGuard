@@ -1,0 +1,135 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background-color: #030712;
+  color: #f8fafc;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Space Grotesk', sans-serif;
+}
+
+code, .font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.5);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.2);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.3);
+}
+
+.leaflet-container {
+  background: #030712 !important;
+  font-family: 'Inter', sans-serif;
+  height: 100% !important;
+  width: 100% !important;
+  position: relative !important;
+}
+
+.leaflet-pane {
+  z-index: auto !important;
+}
+
+.leaflet-control-container {
+  position: absolute !important;
+  z-index: 500 !important;
+}
+
+/* Ensure popups and popup pane render above map layers and are clickable */
+.leaflet-popup,
+.leaflet-popup-pane,
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  z-index: 2000 !important;
+  pointer-events: auto !important;
+}
+
+/* Make map base layer sit under overlays by default */
+.leaflet-container {
+  z-index: 0;
+}
+
+.leaflet-pane canvas {
+  display: block !important;
+}
+
+/* Smooth animations */
+@layer components {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .smooth-scroll {
+    scroll-behavior: smooth;
+  }
+}
+
+.leaflet-control-attribution {
+  background: rgba(15, 23, 42, 0.8) !important;
+  color: #64748b !important;
+  font-size: 10px !important;
+}
+
+.leaflet-control-attribution a {
+  color: #94a3b8 !important;
+}
+
+.leaflet-popup-content-wrapper {
+  background: #1e293b !important;
+  color: #e2e8f0 !important;
+  border-radius: 8px !important;
+  border: 1px solid rgba(148, 163, 184, 0.2) !important;
+}
+
+.leaflet-popup-tip {
+  background: #1e293b !important;
+}
+
+.leaflet-popup-close-button {
+  color: #94a3b8 !important;
+}
+
+.custom-marker {
+  background: none !important;
+  border: none !important;
+}
+
+@keyframes pulse-critical {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+  50% { box-shadow: 0 0 0 16px rgba(239, 68, 68, 0); }
+}
+
+.animate-pulse-critical {
+  animation: pulse-critical 1.5s infinite;
+}

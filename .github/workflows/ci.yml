@@ -1,0 +1,46 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build client
+        run: npm run build
+
+      - name: Start server
+        run: node server/index.js > server.log 2>&1 &
+
+      - name: Wait for server
+        run: |
+          for i in {1..30}; do
+            if curl -fsS http://localhost:3000/api/global/stats > /dev/null; then
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "Server did not become ready in time"
+          exit 1
+
+      - name: Run offline agent test
+        run: npm test
+
+      - name: Show server log on failure
+        if: failure()
+        run: cat server.log
