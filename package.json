@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
-    "client:dev": "cd client && npm install && npx vite",
+    "client:dev": "cd client && npx vite",
     "server:dev": "nodemon server/index.js",
     "build": "npm install && cd client && npm install && npx vite build",
     "start": "node server/index.js",
@@ -28,6 +28,7 @@
     "express": "^5.2.1",
     "express-rate-limit": "^8.0.0",
     "framer-motion": "^12.38.0",
+    "globe.gl": "^2.45.3",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.344.0",
     "nodemon": "^3.1.14",
@@ -37,7 +38,8 @@
     "react-is": "^19.2.5",
     "react-leaflet": "^4.2.1",
     "react-router-dom": "^7.14.2",
-    "recharts": "^3.8.1"
+    "recharts": "^3.8.1",
+    "three": "^0.184.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.9.1",
