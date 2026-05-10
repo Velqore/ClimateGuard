@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
+  envPrefix: ['VITE_', 'OPENWEATHER_API_KEY'],
   server: {
     port: 5000,
     host: '0.0.0.0',

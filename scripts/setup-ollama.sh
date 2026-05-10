@@ -7,7 +7,7 @@
 #  AMD model:     qwen2.5:72b (requires AMD MI300X)
 # ============================================================
 
-set -e
+set -euo pipefail
 
 MODEL="${1:-qwen2.5:3b}"
 OLLAMA_PORT="${OLLAMA_PORT:-11434}"
@@ -85,6 +85,10 @@ install_ollama() {
       fail "Unsupported OS: $OSTYPE. Visit https://ollama.com to install manually."
       ;;
   esac
+
+  if ! command -v ollama &>/dev/null; then
+    fail "Ollama installation did not complete successfully."
+  fi
 
   ok "Ollama installed!"
 }
