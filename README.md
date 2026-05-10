@@ -99,6 +99,12 @@ IQAIR_API_KEY=your_iqair_key
 npm install
 ```
 
+### Vercel note
+
+- Use `npm run build` as the Vercel build command.
+- `npm run dev:amd` is for persistent local/VM development and cannot be used as a Vercel build step.
+- Set `VITE_API_URL` to your backend URL and `VITE_OPENWEATHER_API_KEY` for browser weather tiles.
+
 ### 4. Run in development
 
 ```bash
