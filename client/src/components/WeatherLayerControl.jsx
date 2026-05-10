@@ -8,7 +8,7 @@ export default function WeatherLayerControl() {
   const [activeLayers, setActiveLayers] = useState([]);
   const [legendData, setLegendData] = useState(null);
   const weatherLayersRef = useRef({});
-  const OPENWEATHER_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY || import.meta.env.OPENWEATHER_API_KEY || '';
+  const OPENWEATHER_KEY = import.meta.env.VITE_OPENWEATHER_API_KEY || '';
 
   const layersConfig = {
     precipitation: {
