@@ -101,7 +101,13 @@ export function formatCoords(lat, lon) {
   return `${Math.abs(lat).toFixed(2)}°${latDir}, ${Math.abs(lon).toFixed(2)}°${lonDir}`;
 }
 
-export const API_BASE = import.meta.env.VITE_API_URL || '';
+const rawApiBase = (import.meta.env.VITE_API_URL || '').trim().replace(/\/+$/, '');
+export const API_BASE = rawApiBase.endsWith('/api') ? rawApiBase.slice(0, -4) : rawApiBase;
+
+function buildApiUrl(path) {
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  return API_BASE ? `${API_BASE}${normalizedPath}` : normalizedPath;
+}
 
 // Request cache to avoid duplicate API calls
 const requestCache = new Map();
@@ -111,7 +117,7 @@ const cacheTimeout = 60000; // 1 minute cache
 const ongoingRequests = new Map();
 
 export async function apiFetch(path, options = {}) {
-  const url = `${API_BASE}${path}`;
+  const url = buildApiUrl(path);
   
   // Create cache key (only for GET requests)
   const cacheKey = options.method === 'GET' || !options.method ? url : null;
@@ -132,7 +138,7 @@ export async function apiFetch(path, options = {}) {
   }
   
   // Create the request promise
-  const requestPromise = apiFetchWithRetry(url, options);
+  const requestPromise = apiFetchWithRetry(url, options, 0, path);
   
   // Store ongoing request
   if (cacheKey) {
@@ -157,7 +163,7 @@ export async function apiFetch(path, options = {}) {
   }
 }
 
-async function apiFetchWithRetry(url, options = {}, retries = 0) {
+async function apiFetchWithRetry(url, options = {}, retries = 0, errorPath = '/api') {
   const maxRetries = 3;
   const baseDelay = 1000; // 1 second base delay
   
@@ -177,12 +183,17 @@ async function apiFetchWithRetry(url, options = {}, retries = 0) {
         console.warn(`[429 Rate Limited] Retrying after ${totalDelay.toFixed(0)}ms (attempt ${retries + 1}/${maxRetries})`);
         
         await new Promise(resolve => setTimeout(resolve, totalDelay));
-        return apiFetchWithRetry(url, options, retries + 1);
+        return apiFetchWithRetry(url, options, retries + 1, errorPath);
       }
       
-      throw new Error(`API error: ${res.status}`);
+      throw new Error(`API error: ${res.status} (${String(errorPath).split('?')[0]})`);
     }
-    
+
+    const contentType = res.headers.get('content-type') || '';
+    if (!contentType.includes('application/json')) {
+      throw new Error(`API returned non-JSON response (${String(errorPath).split('?')[0]}) with content-type "${contentType || 'unknown'}"`);
+    }
+
     return res.json();
   } catch (error) {
     // Retry on network errors up to maxRetries
@@ -191,7 +202,7 @@ async function apiFetchWithRetry(url, options = {}, retries = 0) {
       console.warn(`[Network Error] Retrying after ${delay}ms (attempt ${retries + 1}/${maxRetries})`);
       
       await new Promise(resolve => setTimeout(resolve, delay));
-      return apiFetchWithRetry(url, options, retries + 1);
+      return apiFetchWithRetry(url, options, retries + 1, errorPath);
     }
     
     throw error;
