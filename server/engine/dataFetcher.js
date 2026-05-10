@@ -17,10 +17,10 @@
 const axios = require('axios');
 const cache = require('./cache');
 
-const OPENWEATHER_KEY = process.env.OPENWEATHER_API_KEY || '';
-const FIRMS_KEY = process.env.NASA_FIRMS_API_KEY || '';
+const OPENWEATHER_KEY = process.env.OPENWEATHER_API_KEY || process.env.VITE_OPENWEATHER_API_KEY || '';
+const FIRMS_KEY = process.env.NASA_FIRMS_API_KEY || process.env.VITE_NASA_FIRMS_API_KEY || '';
 const FLICKR_KEY = process.env.FLICKR_API_KEY || '';
-const IQAIR_KEY = process.env.IQAIR_API_KEY || '';
+const IQAIR_KEY = process.env.IQAIR_API_KEY || process.env.VITE_IQAIR_API_KEY || '';
 
 /**
  * Geocode a location name to latitude and longitude.

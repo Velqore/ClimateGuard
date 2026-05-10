@@ -21,6 +21,7 @@ const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
 const AI_MODE = (process.env.AI_MODE || 'ollama').toLowerCase();
 
 const GROQ_MODEL = process.env.GROQ_MODEL || 'llama3-8b-8192';
+const GROQ_API_KEY = process.env.GROQ_API_KEY || process.env.VITE_GROQ_API_KEY || '';
 const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'qwen2.5:3b';
 const OLLAMA_BASE_URL = (process.env.OLLAMA_BASE_URL || 'http://localhost:11434').replace(/\/$/, '');
 
@@ -57,7 +58,7 @@ function buildSystemPrompt(message = '') {
 }
 
 async function callGroq(messages, userApiKey) {
-  const apiKey = userApiKey || process.env.GROQ_API_KEY;
+  const apiKey = userApiKey || GROQ_API_KEY;
   if (!apiKey) throw new Error('GROQ_API_KEY not configured — enter your key in the AI Mode panel');
   const res = await axios.post(
     GROQ_URL,
@@ -440,7 +441,7 @@ router.get('/mode', async (req, res) => {
     resolvedFromFallback,
     available: {
       offline: true,
-      groq: !!process.env.GROQ_API_KEY,
+      groq: !!GROQ_API_KEY,
       ollama: true,
     },
   });
