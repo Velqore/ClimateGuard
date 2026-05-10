@@ -113,6 +113,7 @@ function buildApiUrl(path) {
 // Request cache to avoid duplicate API calls
 const requestCache = new Map();
 const cacheTimeout = 60000; // 1 minute cache
+const MAX_ERROR_PREVIEW_LENGTH = 120;
 
 // Ongoing requests to avoid duplicate simultaneous requests
 const ongoingRequests = new Map();
@@ -193,8 +194,8 @@ async function apiFetchWithRetry(url, options = {}, retries = 0) {
     const contentType = res.headers.get('content-type') || '';
     if (!contentType.includes('application/json')) {
       const text = await res.text();
-      const devHint = import.meta.env.DEV ? ` ${text.slice(0, 120)}` : '';
-      throw new Error(`API returned non-JSON response (${url}).${devHint}`);
+      const devHint = import.meta.env.DEV ? text.slice(0, MAX_ERROR_PREVIEW_LENGTH) : '';
+      throw new Error(`API returned non-JSON response (${url})${devHint ? `: ${devHint}` : ''}`);
     }
 
     return res.json();
