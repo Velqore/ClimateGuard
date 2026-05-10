@@ -193,7 +193,8 @@ async function apiFetchWithRetry(url, options = {}, retries = 0) {
     const contentType = res.headers.get('content-type') || '';
     if (!contentType.includes('application/json')) {
       const text = await res.text();
-      throw new Error(`API returned non-JSON response (${url}): ${text.slice(0, 120)}`);
+      const devHint = import.meta.env.DEV ? ` ${text.slice(0, 120)}` : '';
+      throw new Error(`API returned non-JSON response (${url}).${devHint}`);
     }
 
     return res.json();
