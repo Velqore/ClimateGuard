@@ -101,7 +101,14 @@ export function formatCoords(lat, lon) {
   return `${Math.abs(lat).toFixed(2)}°${latDir}, ${Math.abs(lon).toFixed(2)}°${lonDir}`;
 }
 
-export const API_BASE = import.meta.env.VITE_API_URL || '';
+const rawApiBase = (import.meta.env.VITE_API_URL || '').trim().replace(/\/+$/, '');
+export const API_BASE = rawApiBase.endsWith('/api') ? rawApiBase.slice(0, -4) : rawApiBase;
+
+function buildApiUrl(path) {
+  if (/^https?:\/\//i.test(path)) return path;
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  return API_BASE ? `${API_BASE}${normalizedPath}` : normalizedPath;
+}
 
 // Request cache to avoid duplicate API calls
 const requestCache = new Map();
@@ -111,7 +118,7 @@ const cacheTimeout = 60000; // 1 minute cache
 const ongoingRequests = new Map();
 
 export async function apiFetch(path, options = {}) {
-  const url = `${API_BASE}${path}`;
+  const url = buildApiUrl(path);
   
   // Create cache key (only for GET requests)
   const cacheKey = options.method === 'GET' || !options.method ? url : null;
@@ -180,9 +187,15 @@ async function apiFetchWithRetry(url, options = {}, retries = 0) {
         return apiFetchWithRetry(url, options, retries + 1);
       }
       
-      throw new Error(`API error: ${res.status}`);
+      throw new Error(`API error: ${res.status} (${url})`);
     }
-    
+
+    const contentType = res.headers.get('content-type') || '';
+    if (!contentType.includes('application/json')) {
+      const text = await res.text();
+      throw new Error(`API returned non-JSON response (${url}): ${text.slice(0, 120)}`);
+    }
+
     return res.json();
   } catch (error) {
     // Retry on network errors up to maxRetries
