@@ -44,7 +44,7 @@ const limiter = rateLimit({
 app.use(limiter);
 
 const CORS_ORIGIN = process.env.NODE_ENV === 'production'
-  ? [/\.replit\.app$/, /\.railway\.app$/, /\.up\.railway\.app$/, /\.replit\.dev$/, /\.repl\.co$/, /\.amd\.com$/]
+  ? [/\.replit\.app$/, /\.railway\.app$/, /\.up\.railway\.app$/, /\.replit\.dev$/, /\.repl\.co$/, /\.amd\.com$/, /\.vercel\.app$/]
   : ['http://localhost:5173', 'http://localhost:3000', 'http://localhost:5000', /\.replit\.dev$/];
 
 app.use(cors({
