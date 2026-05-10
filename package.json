@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
-    "client:dev": "cd client && npx vite",
+    "client:dev": "cd client && npm install && npx vite",
     "server:dev": "nodemon server/index.js",
     "build": "npm install && cd client && npm install && npx vite build",
     "start": "node server/index.js",
