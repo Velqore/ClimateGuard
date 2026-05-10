@@ -3,7 +3,7 @@ const axios = require('axios');
 
 const router = express.Router();
 
-const YOUTUBE_API_KEY = process.env.GOOGLE_API_KEY;
+const YOUTUBE_API_KEY = process.env.GOOGLE_API_KEY || process.env.VITE_GOOGLE_API_KEY;
 const YOUTUBE_BASE = 'https://www.googleapis.com/youtube/v3';
 
 // GET /api/youtube/live?channelId=<channelId>
